@@ -1,0 +1,54 @@
+#!/bin/bash
+#
+#Este script es para practicar comandos y scripting en bash
+#Es basicamente un To_Do list muy primitivo que funciona en la terminal
+#
+#OBJETIVOS
+#
+#1) El script tiene que ejecutarse como un comando y debe tener argumentos
+#2) argumentos: new list log
+# 
+#	new = Añade una nueva tarea.
+#	Se pide un input con el $nombre de la tarea
+#	Se pide un input para hora de $recordatorio
+#	Se agrega $nombre y $recordatorio a archivo con la lista completa
+#	Se le asigna un número a ambas.
+#	Se envía un output con mensaje de éxito
+#
+#	list = Muestra la lista de tareas
+#	Le aplica un cat al archivo en donde se almacenan las tareas
+#	Se muestra un menú con opciones:
+#
+#		C) Marca una tarea como completa
+#			Pide input del número de la tarea completada
+#			Elimina la tarea del archivo con la lista completa
+#			Reasigna los números de la lista 			
+#			Envía un mensaje de éxito
+#			Manda un log a log.txt
+#
+#		N) Modificar nombre
+#			Pide input del número de la tarea a modificar
+#			Pide input del nuevo nombre
+#			Cambia el nombre de la tarea en el archivo lista
+#			" " " " "
+#			Manda un log a log.txt
+
+#		R) Modificar recordatorio
+#			" " " " " " " " "
+#			" " " " recordatorio
+#			Envía un mensaje de éxito
+#			Manda un log a log.txt
+#
+#		K) Mata tareas sin completarlas
+#			" " " " " " " " " 
+#			Elimina la tarea del archivo
+#			Reasigna los números de la lista
+#			Envía mensaje de kill
+#			Manda un log a log.txt
+#
+#	log = Muestra el historial del todo
+#	Muestra una lista con los eventos del todo, como:
+#	Nuevas tareas, modificaciones, tareas completadas, eliminadas
+#
+#3) Mostrar los argumentos disponibles en caso de no poner ninguno o equivocarse
+		
