@@ -1,0 +1,3 @@
+1 Enviar mensaje y exit en caso de que la tarea quede en blanco 10:00 25/02
+2 Trabajar en el input de reminder 11:00 25/02
+3 Crear un if para cuando haya 1 o más pendientes 
