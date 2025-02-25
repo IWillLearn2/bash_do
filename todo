@@ -17,9 +17,6 @@ read task; echo
 echo "¿Quieres añadir un recordatorio? el formato para hacerlo es hh:mm dd/mm"
 read reminder
 
-list_length=$(wc -l list.txt | cut -d " " -f 1) > /dev/null  
-task_number=$((list_length + 1))
-
-echo "$task_number $task $reminder" >> list.txt; echo
+echo "$task $reminder" >> list.txt; echo
 echo "Has añadido la tarea con éxito :)"
-echo "Tienes $task_number pendiente/s"; echo
+echo "Tienes $(wc -l list.txt) pendiente/s"; echo
