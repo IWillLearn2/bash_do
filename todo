@@ -11,9 +11,19 @@
 #esto creo que con cut -df basta
 #$task_#=$(wc -l list.txt + 1) 
 #$task_# + " " + $task + " "  $reminder" >> list.txt
+
 echo
 echo "¿Qué tarea tienes pendiente?"
-read task; echo
+read -n 90 task; echo
+
+#With the exit code of this grep command I'll know if task name is empty or just numbers
+echo $task | grep "[A-Za-z]" > /dev/null
+
+if [ $? -ne 0 ]; then
+	echo "El nombre de tu tarea tiene que tener por lo menos una letra."
+	exit
+fi
+
 echo "¿Quieres añadir un recordatorio? el formato para hacerlo es hh:mm dd/mm"
 read reminder
 
