@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+#PSEUDOCÓDIGO
+#
+#read $task
+#read $reminder
+#si se deja en blanco, no hay recordatorio
+#si se pone la hora, queda seteado para hoy y a esa hora
+#si se pone día y hora:
+#convert $reminder dd/mm hh:mm into dd month at hhmm
+#esto creo que con cut -df basta
+#$task_#=$(wc -l list.txt + 1) 
+#$task_# + " " + $task + " "  $reminder" >> list.txt
+
+ 
+
+	
