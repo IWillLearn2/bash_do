@@ -1,19 +1,86 @@
 #!/bin/bash
-#
-#PSEUDOCÓDIGO
-#
-#si se pone día y hora:
-#convert $reminder hh:mm  dd:mm into dd month at hhmm
-#esto creo que con cut -df basta
-#$task_#=$(wc -l list.txt + 1) 
-#$task_# + " " + $task + " "  $reminder" >> list.txt
 
+invalid_format() {
 
-#TASK NAME IMPUT
+echo -e "\nTarea agregada con éxito, pero sin recordatorio."
+echo "Razón: El formato de recordatorio no es válido."
+echo "$task" >> list.txt; echo
+exit
+}
+
+check_time() {
+time=$(echo $reminder | cut -d " " -f 1)
+hour=$(echo $time | cut -d ":" -f 1)
+minute=$(echo $time | cut -d ":" -f 2)
+current_hour=$(date +%H)
+current_minute=$(date +%M)
+
+#Check if time format is correct.     
+if [ $hour -gt 23 ] || [ $hour -lt 0 ] || [ $minute -lt 0 ] || [ $minute -gt 59 ]; then
+    time_format="bad"
+    invalid_format
+else
+    time_format="good"
+fi
+ 
+#Check if current time passed reminder's time
+if [ $time_format == "good" ]; then     
+    if [ $hour -lt $current_hour ]; then
+        echo -e "\nTarea agregada con éxito, pero sin recordatorio."
+        echo "Razón: Esa hora ya pasó."
+        echo "$task" >> list.txt; echo
+        exit
+    else
+        if [ $hour -eq $current_hour ]; then
+            if [ $minute -le $current_minute ]; then
+                echo -e "\nTarea agregada con éxito, pero sin recordatorio."
+                echo "Razón: Ese minuto ya pasó."
+                echo "$task" >> list.txt; echo
+                exit
+            fi
+        fi
+    fi
+fi
+}
+
+check_date(){
+date=$(echo $reminder | cut -d " " -f 2)
+day=$(echo $date | cut -d "/" -f 1)
+month=$(echo $date | cut -d "/" -f 2)
+current_day=$(date +%d)
+current_month=$(date +%m)
+
+#Check if date format is correct.
+if [ $day -gt 31 ] || [ $day -lt 0 ] || [ $month -lt 0 ] || [ $month -gt 12 ]; then
+    date_format="bad"
+    invalid_format
+else
+    date_format="good"
+fi
+
+#Check if current date passed reminder's date
+if [ $date_format == "good" ]; then
+    if [ $day -lt $current_day ] && [ $month -ge $current_month ]; then
+        echo -e "\nTarea agregada con éxito, pero sin recordatorio."
+        echo "Razón: ese día ya pasó."
+        echo "$task" >> list.txt; echo
+        exit
+    else
+        if [ $month -gt $current_month ]; then
+	    echo -e "\nTarea agregada con éxito, pero sin recordatorio."
+	    echo "Razón: ese mes ya pasó."
+	    echo "$task" >> list.txt; echo
+	exit
+	fi
+    fi
+fi
+}
+
+#TASK NAME INPUT
 echo -e "\n¿Qué tarea tienes pendiente?"
-read -n 90 task
+read -n 80 task
 
-#With the exit code of this grep command I'll know if task name is empty or just numbers
+#This command check for at least one character in task name.
 echo $task | grep "[A-Za-z]" > /dev/null
 
 if [ $? -ne 0 ]; then
@@ -22,50 +89,25 @@ if [ $? -ne 0 ]; then
 fi
 
 #REMINDER INPUT
-echo -e "\n¿Quieres añadir un recordatorio? el formato para hacerlo es hh:mm dd/mm"
+echo -e "\n¿Quieres añadir un recordatorio? el formato para hacerlo es HH:MM dd/mm"
 read -n 12 reminder
 
 reminder_length=$(echo $reminder | tr -d "\n" | wc -m) 
 
-#CHECKING REMINDER FORMAT
 if [ $reminder_length -eq 5 ]; then
-    hour=$(echo $reminder | cut -d ":" -f 1)
-    minute=$(echo $reminder | cut -d ":" -f 2)
-    current_hour=$(date +%H)
-    current_minute=$(date +%M)
-
-    if [ $hour -gt 23 ] || [ $hour -lt 0 ] || [ $minute -lt 0 ] || [ $minute -gt 59 ]; then
-        reminder_format="bad"
-	echo -e "\nTarea agregada con éxito, pero sin recordatorio."
-	echo "Razón: El formato de recordatorio no es válido."
-    	echo "$task" >> list.txt; echo
-	exit
+check_time
+current_day=$(date +%d/%m)
+reminder=$(echo "$reminder $current_day")
+else
+if [ $reminder_length -eq 11 ]; then
+    check_time
+    check_date   
     else
-        reminder_format="good"            
-    fi       
-
-#Check if current time passed reminder's time
-    if [ $reminder_format == "good" ]; then
-
-        if [ $hour -lt $current_hour ]; then
-	    echo -e "\nTarea agregada con éxito, pero sin recordatorio."
-	    echo "Razon: Esa hora ya pasó."
-	    echo "$task" >> list.txt; echo
-	    exit
-        else
-	    if [ $hour -eq $current_hour ]; then
-	        if [ $minute -le $current_minute ]; then
-	            echo -e "\nTarea agregada con éxito, pero sin recordatorio."
-		    echo "Razón: Ese minuto ya pasó."
-		    echo "$task" >> list.txt; echo
-		    exit
-	        fi
-	    fi
-        fi
+    invalid_format
     fi
 fi
 
 echo "$task $reminder" >> list.txt; echo
 echo "Has añadido la tarea con éxito :)"
-echo "Recordatorio para las $hour:$minute"
+echo "Recordatorio listo."
 echo "Tienes $(wc -l list.txt | cut -d " " -f 1) pendiente/s"; echo
